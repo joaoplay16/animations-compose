@@ -1,6 +1,8 @@
 package com.example.animacoes
 
-import android.util.Log
+import android.media.MediaPlayer
+import android.os.Build
+import android.provider.MediaStore
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -13,21 +15,39 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.animacoes.ui.theme.AnimacoesTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @Composable
 fun StopwatchAnimation(mainViewModel: MainViewModel = viewModel()) {
     val seconds by mainViewModel.seconds.collectAsState(initial = "00")
+    val context = LocalContext.current
+    val mp = MediaPlayer()
+    mainViewModel.callBack = {
+
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mp.setDataSource(context.resources.openRawResourceFd(R.raw.futuresoundfx_7))
+            }
+            mp.prepare()
+            mp.start()
+        }catch (e: Exception){
+            e.printStackTrace();
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -71,7 +91,9 @@ fun PreviewStopwatchAnimation() {
 }
 
 class MainViewModel : ViewModel() {
-    val seconds = (10 downTo 0)
+    var callBack: () -> Unit = {}
+
+    val seconds = (99 downTo 0)
         .asSequence()
         .asFlow()
         .map {
@@ -79,6 +101,11 @@ class MainViewModel : ViewModel() {
         }
         .onEach {
             delay(1000)
+            CoroutineScope(Dispatchers.Main).launch {
+
+                callBack()
+            }
+
         }
 
 }
