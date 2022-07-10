@@ -5,10 +5,13 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
 import androidx.compose.material.Surface
@@ -24,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -31,7 +35,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(enabled = true, state = rememberScrollState()),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -55,6 +61,7 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                        AnimatedShimmer()
+
                         Slider(
                             modifier = Modifier.fillMaxSize(fraction = 0.8f),
                             value = value,
@@ -62,6 +69,8 @@ class MainActivity : ComponentActivity() {
                             onValueChangeFinished = { println("terminei")},
                             valueRange = 0f..100f
                         )
+
+                        StopwatchAnimation()
                     }
                 }
                 }

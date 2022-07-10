@@ -91,7 +91,7 @@ fun PreviewStopwatchAnimation() {
 }
 
 class MainViewModel : ViewModel() {
-    var callBack: () -> Unit = {}
+    var callBack: ()-> Unit = {}
 
     val seconds = (99 downTo 0)
         .asSequence()
@@ -101,8 +101,7 @@ class MainViewModel : ViewModel() {
         }
         .onEach {
             delay(1000)
-            CoroutineScope(Dispatchers.Main).launch {
-
+            CoroutineScope(Dispatchers.IO).launch {
                 callBack()
             }
 
