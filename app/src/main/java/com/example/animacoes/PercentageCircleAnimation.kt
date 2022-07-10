@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,23 +12,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.animacoes.ui.theme.AnimacoesTheme
+import com.example.animacoes.ui.theme.LittleGreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun PercentageCircleAnimation(
     canvasSize: Dp = 300.dp,
-    value: Int = 30
+    value: Int = 23,
+    maxValue: Int = 60
 ) {
-    val percentage = (value.toFloat() / 60) * 100
-    Log.d("PERCENT", "$percentage")
+    val percentage = (value.toFloat() / maxValue.toFloat())
+    Log.d("PERCENT", "percentage $percentage sweep ${percentage * 360}")
     val sweepAngle by animateFloatAsState(
-        targetValue = ( 360/percentage).toFloat(),
-        animationSpec = tween(5000)
+        targetValue = ( percentage * 360  ),
+        animationSpec = tween(1000)
     )
 
     Column(modifier = Modifier
@@ -55,9 +57,9 @@ fun DrawScope.foregroundIndicator(
     ){
     drawArc(
         size = componentSize,
-        color = Color.Blue,
+        color = LittleGreen,
         startAngle =270f,
-        sweepAngle = sweepAngle, //abertura do circulo
+        sweepAngle = sweepAngle, //abertura do angulo
         useCenter = true,
 
         topLeft = Offset(
@@ -73,13 +75,27 @@ fun DrawScope.foregroundIndicator(
 @Composable
 @Preview(showBackground = true)
 fun PercentageCircleAnimationPreview() {
-    AnimacoesTheme {
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            PercentageCircleAnimation(value = 10)
-        }
+    val oneMinute = 60
+
+    var second by remember {
+        mutableStateOf(0)
     }
+    LaunchedEffect(key1 = null,  ){
+        (oneMinute downTo 0)
+            .asSequence()
+            .asFlow()
+
+            .onEach {
+            }.collect{
+                delay(1000)
+                Log.d("FLOW", "$it")
+                second = it as Int
+
+            }
+    }
+    PercentageCircleAnimation(
+        canvasSize= 200.dp,
+        value = second,
+        maxValue = oneMinute
+    )
 }

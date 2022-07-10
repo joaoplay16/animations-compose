@@ -3,8 +3,10 @@ package com.example.animacoes
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,11 +27,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: MainViewModel by viewModels ()
+
         setContent {
             AnimacoesTheme {
                 Surface(
@@ -60,7 +73,29 @@ class MainActivity : ComponentActivity() {
                                 keyboardType =  KeyboardType.Number
                             )
                         )
-                       AnimatedShimmer()
+
+                        val oneMinute = 60
+
+                        var second by remember {
+                            mutableStateOf(0)
+                        }
+                        LaunchedEffect(key1 = null,  ){
+                          (oneMinute downTo 0)
+                                .asSequence()
+                                .asFlow()
+
+                                .onEach {
+                                }.collect{
+                                    delay(1000)
+                                Log.d("FLOW", "$it")
+                                second = it as Int
+
+                            }
+                        }
+                        PercentageCircleAnimation(
+                            value = second,
+                            maxValue = oneMinute
+                        )
 
                         Slider(
                             modifier = Modifier.fillMaxSize(fraction = 0.8f),
@@ -70,10 +105,11 @@ class MainActivity : ComponentActivity() {
                             valueRange = 0f..100f
                         )
 
+                        AnimatedShimmer()
                         StopwatchAnimation()
                     }
                 }
-                }
+            }
 
         }
     }
