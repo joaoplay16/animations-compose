@@ -1,8 +1,8 @@
 package com.example.animacoes
 
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,28 +14,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
-import androidx.compose.material.Surface
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
@@ -74,29 +63,6 @@ class MainActivity : ComponentActivity() {
                             )
                         )
 
-                        val oneMinute = 60
-
-                        var second by remember {
-                            mutableStateOf(0)
-                        }
-                        LaunchedEffect(key1 = null,  ){
-                          (oneMinute downTo 0)
-                                .asSequence()
-                                .asFlow()
-
-                                .onEach {
-                                }.collect{
-                                    delay(1000)
-                                Log.d("FLOW", "$it")
-                                second = it as Int
-
-                            }
-                        }
-                        PercentageCircleAnimation(
-                            value = second,
-                            maxValue = oneMinute
-                        )
-
                         Slider(
                             modifier = Modifier.fillMaxSize(fraction = 0.8f),
                             value = value,
@@ -105,8 +71,48 @@ class MainActivity : ComponentActivity() {
                             valueRange = 0f..100f
                         )
 
-                        AnimatedShimmer()
+                        var minutes by remember {
+                            mutableStateOf(0L)
+                        }
+                        var seconds by remember {
+                            mutableStateOf(0L)
+                        }
+                        var timeInMillisUntilFinished  by remember {
+                            mutableStateOf(0L)
+                        }
+
+                        val TIME_IN_MILLIS = 2 * 60000L
+
+
+                        LaunchedEffect(key1 = "" ) {
+                            val timer = object: CountDownTimer(TIME_IN_MILLIS, 1000) {
+                                override fun onTick(millisUntilFinished: Long) {
+
+                                    seconds = (millisUntilFinished / 1000) % 60
+
+                                    minutes =(millisUntilFinished / 1000) / 60
+                                    timeInMillisUntilFinished = millisUntilFinished
+                                    Log.d("CountDownTimer", "${timeInMillisUntilFinished / 1000 %60}")
+
+                                }
+
+                                override fun onFinish() {
+
+                                }
+                            }
+                            timer.start()
+                        }
+
+                        PercentageCircleAnimation(
+                            value = timeInMillisUntilFinished.toInt(),
+                            maxValue = TIME_IN_MILLIS.toInt()
+                        )
+                        Text("$minutes:$seconds")
+
+
+
                         StopwatchAnimation()
+                        AnimatedShimmer()
                     }
                 }
             }
