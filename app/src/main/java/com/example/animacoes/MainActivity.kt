@@ -113,6 +113,8 @@ class MainActivity : ComponentActivity() {
 
                         StopwatchAnimation()
                         AnimatedShimmer()
+
+                        LoadingCircleAnimation()
                     }
                 }
             }

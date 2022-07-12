@@ -2,7 +2,9 @@ package com.example.animacoes
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -13,12 +15,12 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
 
 @Composable
 fun LoadingCircleAnimation(
+    color: Color = Color.Black
 ) {
     val canvasSize = 30.dp
 
@@ -47,11 +49,13 @@ fun LoadingCircleAnimation(
             val componentSize2 = componentSize / 2.3f
 
             externalCircle(
-                componentSize = componentSize
+                componentSize = componentSize,
+                color = color
             )
 
             internalCircle(
-                componentSize = componentSize2, sweepAngle = sweepAngle
+                componentSize = componentSize2, sweepAngle = sweepAngle,
+                color = color
             )
 
         },
@@ -61,11 +65,11 @@ fun LoadingCircleAnimation(
 fun DrawScope.internalCircle(
     componentSize: Size,
     sweepAngle: Float,
-
+    color: Color
     ){
     drawArc(
         size = componentSize,
-        color = Color.Black,
+        color = color,
         startAngle = sweepAngle,
         sweepAngle = 1f, //abertura do angulo
         useCenter = false,
@@ -85,10 +89,11 @@ fun DrawScope.internalCircle(
 
 fun DrawScope.externalCircle(
     componentSize: Size,
-    ){
+    color: Color
+){
     drawArc(
         size = componentSize,
-        color = Color.Black,
+        color = color,
         startAngle = 0f,
         sweepAngle = 360f, //abertura do angulo
         useCenter = false,
