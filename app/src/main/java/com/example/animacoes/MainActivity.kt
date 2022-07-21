@@ -18,13 +18,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
@@ -103,7 +101,7 @@ class MainActivity : ComponentActivity() {
                             timer.start()
                         }
 
-                        PercentageCircleAnimation(
+                        CompassAnimation(
                             value = timeInMillisUntilFinished.toInt(),
                             maxValue = TIME_IN_MILLIS.toInt()
                         )
@@ -114,7 +112,10 @@ class MainActivity : ComponentActivity() {
                         StopwatchAnimation()
                         AnimatedShimmer()
 
-                        LoadingCircleAnimation()
+                        CompassAnimation(
+                            color = MaterialTheme.colors.onBackground,
+                            degrees = 0
+                        )
                     }
                 }
             }

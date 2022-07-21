@@ -66,7 +66,7 @@ fun DrawScope.internalCircle(
     componentSize: Size,
     sweepAngle: Float,
     color: Color
-    ){
+){
     drawArc(
         size = componentSize,
         color = color,
@@ -122,7 +122,7 @@ fun LoadingCircleAnimationPreview() {
 
         ) {
 
-        LoadingCircleAnimation()
+            LoadingCircleAnimation()
         }
     }
 }
