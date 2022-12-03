@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -17,18 +18,24 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
 
 @Composable
 fun GrowingCircleAnimation(
-    color: Color = Color.Black
+    modifier: Modifier = Modifier,
+    externalCircleColor: Color = Color.Black,
+    innerCircleColor: Color = Color.Black,
+    circleStroke: Float = 20f,
 ) {
-    val canvasSize = 400.dp
 
-    val circleSize = remember { Animatable(initialValue = 80f)}
+    val canvasSize: Dp = 300.dp
 
     val animationDuration = 2000
+
+    val externalCircle = remember { Animatable(initialValue = 160f)}
+    val innerCircle = remember { Animatable(initialValue = 60f)}
 
     val alpha by rememberInfiniteTransition().animateFloat(
         1f,
@@ -39,8 +46,8 @@ fun GrowingCircleAnimation(
         )
     )
 
-    LaunchedEffect(key1 = circleSize ){
-        circleSize.animateTo(
+    LaunchedEffect(key1 = externalCircle ){
+        externalCircle.animateTo(
             targetValue = 360f,
             animationSpec = infiniteRepeatable(
                 animation = keyframes {
@@ -53,26 +60,49 @@ fun GrowingCircleAnimation(
         )
     }
 
+    LaunchedEffect(key1 = innerCircle ){
+        innerCircle.animateTo(
+            targetValue = 180f,
+            animationSpec = infiniteRepeatable(
+                animation = keyframes {
+                    durationMillis = animationDuration
 
-    Box(modifier = Modifier
+                    180f at durationMillis with LinearOutSlowInEasing
+                },
+                repeatMode = RepeatMode.Restart
+            )
+        )
+    }
+
+
+    Box(modifier = modifier
         .size(canvasSize)
         .alpha(alpha)
+        .scale(1f)
         .drawBehind {
 
-            val componentSize = Size(width = circleSize.value, height = circleSize.value)
+            val externalCircleSize = Size(width = externalCircle.value, height = externalCircle.value)
+            val innerCircleSize = Size(width = innerCircle.value, height = innerCircle.value)
 
-            firstCircle(
-                componentSize = componentSize,
-                color = color
+            externalCircle(
+                componentSize = externalCircleSize,
+                color = externalCircleColor,
+                stroke = circleStroke
             )
 
+            innerCircle(
+                componentSize = innerCircleSize,
+                color = innerCircleColor,
+                stroke = circleStroke
+            )
         },
     )
 }
 
-fun DrawScope.firstCircle(
+fun DrawScope.externalCircle(
     componentSize: Size,
-    color: Color
+    color: Color,
+    stroke: Float
 ){
     drawArc(
         size = componentSize,
@@ -81,7 +111,32 @@ fun DrawScope.firstCircle(
         sweepAngle =360f,
         useCenter = false,
         style = Stroke(
-            width = 30f,
+            width = stroke,
+            cap = StrokeCap.Round
+        ),
+
+        topLeft = Offset(
+            //size é o canvasSize
+            //centralizando
+            x = (size.width - componentSize.width) / 2f,
+            y = (size.height - componentSize.height) / 2f
+        )
+    )
+}
+
+fun DrawScope.innerCircle(
+    componentSize: Size,
+    color: Color,
+    stroke: Float
+){
+    drawArc(
+        size = componentSize,
+        color = color,
+        startAngle = 0f,
+        sweepAngle =360f,
+        useCenter = false,
+        style = Stroke(
+            width = stroke,
             cap = StrokeCap.Round
         ),
 
@@ -95,7 +150,6 @@ fun DrawScope.firstCircle(
 }
 
 
-
 @Composable
 @Preview(showBackground = true)
 fun GrowingCircleAnimationPreview() {
@@ -106,8 +160,10 @@ fun GrowingCircleAnimationPreview() {
             verticalArrangement = Arrangement.Center
 
         ) {
-
-           GrowingCircleAnimation()
+           GrowingCircleAnimation(
+               externalCircleColor = Color(0xB37C0BA2),
+               innerCircleColor = Color(0xB3B05BFF),
+           )
         }
     }
 }
