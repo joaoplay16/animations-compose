@@ -1,10 +1,11 @@
 package com.example.animacoes
 
-import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -32,6 +33,46 @@ fun BouncingWavesAnimation(
     val secondStickHeight = remember { Animatable(initialValue = 160f) }
     val thirdStickHeight = remember { Animatable(initialValue = 160f) }
     val fourthStickHeight = remember { Animatable(initialValue = 160f) }
+
+    LaunchedEffect(key1 = firstStickHeight) {
+        firstStickHeight.animateTo(
+            targetValue = 30f,
+            animationSpec = infiniteRepeatable(
+                tween(600, 0, EaseInOutCubic),
+                repeatMode = RepeatMode.Reverse
+            ),
+        )
+    }
+
+    LaunchedEffect(key1 = secondStickHeight) {
+        secondStickHeight.animateTo(
+            targetValue = 30f,
+            animationSpec = infiniteRepeatable(
+                tween(600, 60, EaseInOutCubic),
+                repeatMode = RepeatMode.Reverse
+            ),
+        )
+    }
+
+    LaunchedEffect(key1 = thirdStickHeight) {
+        thirdStickHeight.animateTo(
+            targetValue = 30f,
+            animationSpec = infiniteRepeatable(
+                tween(600, 20, EaseInOutCubic),
+                repeatMode = RepeatMode.Reverse
+            ),
+        )
+    }
+
+    LaunchedEffect(key1 = fourthStickHeight) {
+        fourthStickHeight.animateTo(
+            targetValue = 30f,
+            animationSpec = infiniteRepeatable(
+                tween(600, 0, EaseInOutCubic),
+                repeatMode = RepeatMode.Reverse
+            ),
+        )
+    }
 
     Box(modifier = modifier
         .size(canvasSize)
