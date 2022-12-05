@@ -25,14 +25,18 @@ import com.example.animacoes.ui.theme.AnimacoesTheme
 @Composable
 fun BouncingWavesAnimation(
     modifier: Modifier = Modifier,
+    firstStickColor: Color = Color.Black,
+    secondStickColor: Color = Color.Black,
+    thirdStickColor: Color = Color.Black,
+    fourthStickColor: Color = Color.Black,
 ){
 
     val canvasSize: Dp = 300.dp
 
-    val firstStickHeight = remember { Animatable(initialValue = 160f) }
-    val secondStickHeight = remember { Animatable(initialValue = 160f) }
-    val thirdStickHeight = remember { Animatable(initialValue = 160f) }
-    val fourthStickHeight = remember { Animatable(initialValue = 160f) }
+    val firstStickHeight = remember { Animatable(initialValue = 130f) }
+    val secondStickHeight = remember { Animatable(initialValue = 150f) }
+    val thirdStickHeight = remember { Animatable(initialValue = 150f) }
+    val fourthStickHeight = remember { Animatable(initialValue = 130f) }
 
     LaunchedEffect(key1 = firstStickHeight) {
         firstStickHeight.animateTo(
@@ -87,7 +91,7 @@ fun BouncingWavesAnimation(
             //FIRST
             stick(
                 componentSize = firstStickSize,
-                color = Color.Magenta,
+                color = firstStickColor,
                 stroke = 30f,
                 offset = Offset(
                     x = (size.width / 2.46f),
@@ -98,7 +102,7 @@ fun BouncingWavesAnimation(
             //SECOND
             stick(
                 componentSize = secondStickSize,
-                color = Color.Green,
+                color = secondStickColor,
                 stroke = 30f,
                 offset = Offset(
                     x = (size.width / 2.08f),
@@ -109,7 +113,7 @@ fun BouncingWavesAnimation(
             // THIRD
             stick(
                 componentSize = thirdStickSize,
-                color = Color.Cyan,
+                color = thirdStickColor,
                 stroke = 30f,
                 offset = Offset(
                     x = (size.width / 1.8f),
@@ -120,7 +124,7 @@ fun BouncingWavesAnimation(
             // FOURTH
             stick(
                 componentSize = fourthStickSize,
-                color = Color.Blue,
+                color = fourthStickColor,
                 stroke = 30f,
                 offset = Offset(
                     x = (size.width / 1.60f),
@@ -154,7 +158,12 @@ fun DrawScope.stick(
 fun PreviewBouncingWavesAnimation() {
     AnimacoesTheme {
         Surface {
-            BouncingWavesAnimation()
+            BouncingWavesAnimation(
+                firstStickColor = Color(0xFF3DB1CB),
+                secondStickColor = Color(0x9E9EB47B),
+                thirdStickColor = Color(0xCCB65B90),
+                fourthStickColor = Color(0xFFCCCB76),
+            )
         }
     }
 }
