@@ -1,4 +1,4 @@
-package com.example.animacoes
+package com.example.testcompose.ui.animation
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -18,13 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.example.animacoes.ui.theme.AnimacoesTheme
 
 @Composable
 fun ProgressIndicator(
-    canvasSize: Dp = 300.dp,
+    canvasSize: DpSize = DpSize(width = 300.dp, height = 50.dp),
     indicatorValue: Int = 0,
     maxIndicatorValue: Int = 100,
     backgroundIndicatorColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
@@ -73,7 +73,7 @@ fun ProgressIndicator(
         },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    ) {
 
     }
 }
@@ -114,7 +114,7 @@ fun DrawScope.backgroundLine(
 @Composable
 @Preview(showBackground = true)
 fun ProgressIndicatorPreview() {
-    AnimacoesTheme {
+    AnimacoesTheme() {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
