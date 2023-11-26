@@ -1,4 +1,4 @@
-package com.example.testcompose.ui.animation
+package com.example.animacoes
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
