@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun CompassAnimation(
+fun  PercentageCircleAnimation(
     canvasSize: Dp = 300.dp,
     value: Int = 23,
     maxValue: Int = 60
@@ -93,7 +93,7 @@ fun PercentageCircleAnimationPreview() {
 
             }
     }
-    CompassAnimation(
+    PercentageCircleAnimation(
         canvasSize= 200.dp,
         value = second,
         maxValue = oneMinute
