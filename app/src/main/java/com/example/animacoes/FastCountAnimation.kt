@@ -36,7 +36,8 @@ fun FastCountAnimation(
     format: String = "%.1f",
     textStyle: TextStyle = TextStyle(
         fontSize = 76.sp,
-    )
+    ),
+    onCount: (Float) -> Unit = {}
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -67,6 +68,13 @@ fun FastCountAnimation(
             coroutineScope.launch {
                 animatableX.stop()
             }
+        }
+    )
+
+    LaunchedEffect(
+        key1 = animatedCount,
+        block = {
+            onCount(animatedCount)
         }
     )
 
