@@ -3,7 +3,9 @@ package com.example.animacoes
 import android.content.res.Configuration
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Ease
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
@@ -62,7 +64,7 @@ fun FastCountAnimation(
         label = "",
         animationSpec = tween(
             4000,
-            easing = Ease
+            easing = FastOutLinearInEasing
         ),
         finishedListener = {
             coroutineScope.launch {
